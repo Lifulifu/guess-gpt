@@ -1,4 +1,4 @@
-import { TARGET } from '../../../constants'
+import { TARGET } from '../../../lib/constants'
 
 function applyPromptTemplate(q: string) {
   return `

@@ -1,24 +1,31 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	import type { BubbleData, LogData } from '../types';
-	import { TARGET, PROBLEMS } from '../constants';
-	import Button from '../components/Button.svelte';
-	import Conversation from '../components/Conversation.svelte';
-	import GuessPanel from '../components/GuessPanel.svelte';
+	import type { BubbleData, LogData } from '$lib/types';
+	import { TARGET, PROBLEMS } from '$lib/constants';
+	import Button from '$lib/components/Button.svelte';
+	import Conversation from '$lib/components/Conversation.svelte';
+	import GuessPanel from '$lib/components/GuessPanel.svelte';
+	import Navbar from '$lib/components/Navbar.svelte';
+	import ResultPanel from '$lib/components/ResultPanel.svelte';
+	import pinyin from 'chinese-to-pinyin';
 
 	// data
 	let problem: string = '';
 	let textInputValue: string = TARGET;
 	let conversation: BubbleData[] = [];
 	let logs: LogData[] = [];
+	let hint: string = '';
+	let questionCount: number = 0;
+	let isWin: boolean = false;
 
 	// UI
 	let textInputDom: HTMLInputElement;
-	let textInputDisabled: boolean = false;
 	let isTyping: 'l' | 'r' | null;
 	let showGuessPanel: boolean = false;
+	let showResultPanel: boolean = false;
 	let showHiddenText: boolean = false;
+	let inputLocked: boolean = false;
 
 	onMount(() => {
 		reset();
@@ -27,16 +34,29 @@
 	function reset() {
 		textInputValue = TARGET;
 		conversation = [];
-		isTyping = null;
 		logs = [];
+		questionCount = 0;
+		isWin = false;
+		isTyping = null;
+		showHiddenText = false;
+		inputLocked = false;
+
+		// generate new problem
 		problem = getProblem();
+		hint = `這個物件有${problem.length}個字，聲調是${getTone(problem)}聲，請問是什麼？`;
+		updateConversation('l', hint);
 	}
 
 	function getProblem() {
 		return PROBLEMS[Math.floor(Math.random() * PROBLEMS.length)];
 	}
 
+	function getTone(text: string) {
+		return pinyin(text, { toneToNumberOnly: true }).replace(' ', ', ');
+	}
+
 	function addTheThing() {
+		if (inputLocked) return;
 		const startPos = textInputDom.selectionStart;
 		const endPos = textInputDom.selectionEnd;
 		if (startPos === null || endPos === null) {
@@ -74,7 +94,7 @@
 		// add my question to the conversation
 		updateConversation('r', question);
 		// wait for response
-		textInputDisabled = true;
+		inputLocked = true;
 		isTyping = 'l';
 		try {
 			const res = await fetchAnswer(question, problem);
@@ -84,59 +104,89 @@
 			// got response, add it to the conversation and logs
 			updateConversation('l', response.answer, response.reason);
 			updateLogs(question, response.answer, response.reason);
+			questionCount++;
 			textInputValue = TARGET; // reset input value
 		} catch (e) {
 			updateConversation('l', '發生錯誤，請再試一次', '', true);
 			console.error(e);
 		}
-		textInputDisabled = false;
+		inputLocked = false;
 		isTyping = null;
 		textInputDom.focus();
 	}
 
+	function textInputIsValid(text: string) {
+		return text !== '' && text.includes(TARGET);
+	}
+
 	function onGuessClick() {
-		showGuessPanel = true;
+		if (isWin) showResultPanel = true;
+		else showGuessPanel = true;
 	}
 
 	function guess(val: string) {
-		console.log('guess');
 		if (!val) return;
 		showGuessPanel = false;
 		val = val.trim();
 		updateConversation('r', `我猜答案是"${val}"`);
 		if (val === problem) {
-			updateConversation('l', '恭喜你答對了！');
-			showHiddenText = true;
+			isWin = true;
+			showResultPanel = true;
+			updateConversation('l', `答對了，答案是"${problem}"!`);
 		} else {
-			updateConversation('l', '答案不對喔，再試試看！');
+			isWin = false;
+			showResultPanel = true;
+			updateConversation('l', `答錯了！`);
 		}
+	}
+
+	function reveal() {
+		updateConversation('l', `答案是"${problem}"!`);
+		showHiddenText = true;
+		inputLocked = true;
+	}
+
+	function continueGuess() {
+		questionCount++;
 	}
 </script>
 
-<div class="bg-slate-200">
-	<div class="m-auto max-w-2xl h-screen px-4 py-8 flex flex-col gap-2">
-		<Conversation data={conversation} {isTyping} {showHiddenText} cls="flex-grow" />
+<Navbar cls="h-12" />
+<div class="h-screen bg-slate-200">
+	<div class="mx-auto h-full w-full max-w-2xl pt-16 pb-10 flex flex-col gap-2 ">
+		<Conversation data={conversation} {isTyping} {showHiddenText} cls="flex-grow overflow-y-auto" />
 
 		<div class="flex gap-2">
-			<Button variation="secondary" on:click={addTheThing}>加入"{TARGET}"</Button>
-			<Button variation="primary" on:click={onGuessClick}>我要作答</Button>
+			<Button variation="secondary" cls="mr-auto" on:click={addTheThing}>那個東西"{TARGET}"</Button>
+			<Button variation="warning" on:click={reveal}>放棄</Button>
+			<Button variation="secondary" on:click={reset}>重開</Button>
+			<Button variation="primary" on:click={onGuessClick}>作答</Button>
 		</div>
 
-		<form class="flex-shrink-0 flex" on:submit={() => askQuestion(textInputValue)}>
+		<form class="flex" on:submit={() => askQuestion(textInputValue)}>
 			<input
 				type="text"
 				bind:this={textInputDom}
 				bind:value={textInputValue}
-				disabled={textInputDisabled}
+				disabled={inputLocked}
 				class="flex-grow rounded-l-lg border-2 border-slate-400 focus:border-indigo-600 outline-none px-4 py-2"
 			/>
 			<input
 				type="submit"
 				value="我要提問"
-				class="rounded-r-lg border-2 border-indigo-600 px-4 py-2 text-lg text-white font-bold bg-indigo-600 hover:brightness-90"
+				disabled={!textInputIsValid(textInputValue) || inputLocked}
+				class="rounded-r-lg border-2 border-indigo-600 px-4 py-2 text-lg text-white font-bold bg-indigo-600 hover:brightness-90 disabled:bg-slate-400 disabled:border-slate-400"
 			/>
 		</form>
-	</div>
 
-	<GuessPanel bind:show={showGuessPanel} on:submitGuess={(e) => guess(e.detail.guess)} />
+		<GuessPanel bind:show={showGuessPanel} on:submitGuess={(e) => guess(e.detail.guess)} />
+
+		<ResultPanel
+			bind:show={showResultPanel}
+			win={isWin}
+			{questionCount}
+			on:reveal={reveal}
+			on:continue={continueGuess}
+		/>
+	</div>
 </div>

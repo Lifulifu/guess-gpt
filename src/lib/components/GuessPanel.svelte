@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import Button from './Button.svelte';
+	import Button from '$lib/components/Button.svelte';
 	export let show: boolean = false;
 	let guess: string = '';
 	const dispatch = createEventDispatcher();
@@ -26,11 +26,12 @@
 					bind:value={guess}
 				/>
 				<div class="mt-2 flex gap-2">
-					<Button on:click={() => (show = false)} variation="secondary">取消</Button>
+					<Button cls="flex-grow" on:click={() => (show = false)} variation="secondary">取消</Button
+					>
 					<input
 						type="submit"
 						value="確定"
-						class="rounded-lg border-2 border-indigo-600 px-4 py-2 text-lg text-white font-bold bg-indigo-600 hover:brightness-90"
+						class="flex-grow rounded-lg border-2 border-indigo-600 px-4 py-2 text-lg text-white font-bold bg-indigo-600 hover:brightness-90"
 					/>
 				</div>
 			</form>
