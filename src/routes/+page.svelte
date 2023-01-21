@@ -1,7 +1,20 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	const theThing = '🤔';
 	let textInputDom: HTMLInputElement;
 	let textInputValue: string = theThing;
+	let response: string = '';
+
+	onMount(() => {
+		fetch('/api')
+			.then(() => {
+				console.log('api setup done.');
+			})
+			.catch((e) => {
+				console.error(e);
+			});
+	});
 
 	function addTheThing() {
 		const startPos = textInputDom.selectionStart;
@@ -18,7 +31,13 @@
 	}
 
 	function askQuestion() {
-		console.log('askQuestion');
+		fetch(`/api?q=${textInputValue}`).then(async (res) => {
+			if (!res.ok) {
+				console.error(res);
+				return;
+			}
+			console.log(await res.json());
+		});
 		textInputDom.value = '';
 	}
 </script>
@@ -26,7 +45,9 @@
 <!-- chatroom  -->
 <div class="bg-slate-50">
 	<div class="m-auto max-w-2xl h-screen px-4 py-8 flex flex-col gap-2">
-		<div class="flex-grow" />
+		<div class="flex-grow">
+			{response}
+		</div>
 
 		<div class="flex gap-2">
 			<button
