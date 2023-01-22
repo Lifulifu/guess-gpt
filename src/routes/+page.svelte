@@ -14,7 +14,6 @@
 	let problem: string = '';
 	let textInputValue: string = TARGET;
 	let conversation: BubbleData[] = [];
-	let logs: LogData[] = [];
 	let hint: string = '';
 	let questionCount: number = 0;
 	let isWin: boolean = false;
@@ -36,7 +35,6 @@
 		gameEnded = false;
 		textInputValue = TARGET;
 		conversation = [];
-		logs = [];
 		questionCount = 0;
 		isWin = false;
 		isTyping = null;
@@ -82,11 +80,6 @@
 		conversation = conversation;
 	}
 
-	function updateLogs(question: string, answer: string, reason: string) {
-		logs.push({ question, answer, reason });
-		logs = logs;
-	}
-
 	function fetchAnswer(q: string, target: string) {
 		return fetch(`/api/guess-object?q=${q}&target=${target}`);
 	}
@@ -105,7 +98,6 @@
 
 			// got response, add it to the conversation and logs
 			updateConversation('l', response.answer, response.reason);
-			updateLogs(question, response.answer, response.reason);
 			questionCount++;
 			textInputValue = TARGET; // reset input value
 		} catch (e) {
