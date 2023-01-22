@@ -157,7 +157,7 @@
 
 <Navbar cls="h-12 shadow" />
 <div class="h-screen px-4 bg-slate-200">
-	<div class="mx-auto h-full w-full max-w-2xl pt-16 pb-10 flex flex-col gap-2 ">
+	<div class="mx-auto h-full w-full max-w-2xl pt-16 pb-4 flex flex-col gap-2 ">
 		<Conversation data={conversation} {isTyping} {showHiddenText} cls="flex-grow" />
 
 		<div class="flex gap-2 pt-2 border-t border-slate-400">
@@ -184,6 +184,11 @@
 				class="rounded-r-lg border-2 border-indigo-600 px-4 py-2 text-lg text-white font-bold bg-indigo-600 hover:brightness-90 disabled:bg-slate-400 disabled:border-slate-400"
 			/>
 		</form>
+		<div
+			class={`text-sm text-red-500 ${textInputIsValid(textInputValue) ? 'invisible' : 'visible'}`}
+		>
+			問題必須包含"{TARGET}"!
+		</div>
 
 		<GuessPanel bind:show={showGuessPanel} on:submitGuess={(e) => submitGuess(e.detail.guess)} />
 
