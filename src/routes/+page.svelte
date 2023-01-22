@@ -26,6 +26,7 @@
 	let showResultPanel: boolean = false;
 	let showHiddenText: boolean = false;
 	let inputLocked: boolean = false;
+	let windowHeight: number = 0;
 
 	onMount(() => {
 		reset();
@@ -148,7 +149,7 @@
 </script>
 
 <Navbar cls="h-12 shadow" />
-<div class="h-screen px-4 bg-slate-200">
+<div class="main-content px-4 bg-slate-200" style={`--window-height: ${windowHeight}px`}>
 	<div class="mx-auto h-full w-full max-w-2xl pt-16 pb-4 flex flex-col gap-2 ">
 		<Conversation data={conversation} {isTyping} {showHiddenText} cls="flex-grow" />
 
@@ -192,3 +193,11 @@
 		/>
 	</div>
 </div>
+
+<svelte:window bind:innerHeight={windowHeight} />
+
+<style>
+	.main-content {
+		height: var(--window-height);
+	}
+</style>

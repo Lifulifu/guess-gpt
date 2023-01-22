@@ -16,7 +16,9 @@
 <button
 	type="button"
 	{disabled}
-	class={'rounded-lg px-4 py-2 text-lg font-bold hover:brightness-90 ' + variationStyle + cls}
+	class={'rounded-lg px-2 sm:px-4 py-2 text-md font-bold hover:brightness-90 ' +
+		variationStyle +
+		cls}
 	on:click
 >
 	<slot />
