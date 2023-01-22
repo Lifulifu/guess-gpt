@@ -1,38 +1,36 @@
-# create-svelte
+# GuessGPT
+沒朋友也能玩的猜物品遊戲！
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## 玩法
+- 用 **是非題** 詢問chatGPT來猜出某樣東西。
+<img width=400 src="https://i.imgur.com/8mz6H6t.png"/>
 
-## Creating a project
+- `🤔`代表你要問出的`這個東西`，問題中必須包含它。它可以出現在問題的任何地方。按`這個東西🤔`按鈕可以加入編輯中的文字。
+<img width=400 src="https://i.imgur.com/74aoIrq.png"/>
 
-If you're seeing this, you've probably already done this step. Congrats!
+<img width=200 src="https://i.imgur.com/c8PJnF9.png"/>
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+- 若問題不是是非題，將無法得到線索
+<img width=400 src="https://i.imgur.com/PJThQWz.png"/>
 
-# create a new project in my-app
-npm create svelte@latest my-app
+<img width=400 src="https://i.imgur.com/TBR3qfa.png"/>
+
+- 若答對或放棄即可以揭曉答案，在對話紀錄chatGPT會試著解釋他每一題的回答，看看到底是誰在雷。
+<img width=400 src="https://i.imgur.com/HQqUEA9.png"/>
+
+- 若出現錯誤，有可能是由於超出chatGPT流量限制，也有可能是你的問題太奇怪，chatGPT給出的答案無法解析
+<img width=400 src="https://i.imgur.com/YcA3BDv.png"/>
+  
+- 儘量問具體明確的問題，否則容易得到"不一定"的答案
+<img width=400 src="https://i.imgur.com/pg1C4am.png"/>
+
+## Dev
+```
+pnpm i
+pnpm dev
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+## Build
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
+pnpm build
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
