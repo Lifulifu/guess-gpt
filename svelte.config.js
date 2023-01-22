@@ -10,6 +10,7 @@ const config = {
 	kit: {
 		adapter: adapter({
 			edge: false,
+			external: [],
 			split: false
 		})
 	}
