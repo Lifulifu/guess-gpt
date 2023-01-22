@@ -1,13 +1,24 @@
 <script lang="ts">
 	import Bubble from '$lib/components/Bubble.svelte';
 	import type { BubbleData } from '$lib/types';
+	import { afterUpdate } from 'svelte';
 	export let data: BubbleData[] = [];
 	export let showHiddenText: boolean = false;
 	export let isTyping: 'l' | 'r' | null;
 	export let cls = '';
+	let conversationDom: HTMLDivElement;
+
+	// scroll to bottom when new bubble arrives
+	afterUpdate(() => {
+		if (!conversationDom) return;
+		conversationDom.scroll({
+			top: conversationDom.scrollHeight,
+			behavior: 'smooth'
+		});
+	});
 </script>
 
-<div class={'flex flex-col gap-2 ' + cls}>
+<div class={'flex flex-col gap-2 overflow-y-auto ' + cls} bind:this={conversationDom}>
 	{#each data as bubble}
 		<Bubble
 			side={bubble.side}

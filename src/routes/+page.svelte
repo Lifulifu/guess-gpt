@@ -43,7 +43,7 @@
 
 		// generate new problem
 		problem = getProblem();
-		hint = `這個物件有${problem.length}個字，聲調是${getTone(problem)}聲，請問是什麼？`;
+		hint = `這個東西有 ${problem.length} 個字，聲調是 ${getTone(problem)} 聲，請問是什麼？`;
 		updateConversation('l', hint);
 	}
 
@@ -52,7 +52,7 @@
 	}
 
 	function getTone(text: string) {
-		return pinyin(text, { toneToNumberOnly: true }).replace(' ', ', ');
+		return (pinyin(text, { toneToNumberOnly: true }) as string).replaceAll(' ', ',');
 	}
 
 	function addTheThing() {
@@ -152,12 +152,12 @@
 </script>
 
 <Navbar cls="h-12" />
-<div class="h-screen bg-slate-200">
+<div class="h-screen px-4 bg-slate-200">
 	<div class="mx-auto h-full w-full max-w-2xl pt-16 pb-10 flex flex-col gap-2 ">
-		<Conversation data={conversation} {isTyping} {showHiddenText} cls="flex-grow overflow-y-auto" />
+		<Conversation data={conversation} {isTyping} {showHiddenText} cls="flex-grow" />
 
-		<div class="flex gap-2">
-			<Button variation="secondary" cls="mr-auto" on:click={addTheThing}>那個東西"{TARGET}"</Button>
+		<div class="flex gap-2 pt-2 border-t border-slate-400">
+			<Button variation="secondary" cls="mr-auto" on:click={addTheThing}>這個東西"{TARGET}"</Button>
 			<Button variation="warning" on:click={reveal}>放棄</Button>
 			<Button variation="secondary" on:click={reset}>重開</Button>
 			<Button variation="primary" on:click={onGuessClick}>作答</Button>
