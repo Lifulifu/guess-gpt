@@ -26,7 +26,7 @@ export function getPromptFromQuestion(q: string, targetAnswer: string) {
 }
 
 export function parseResponse(res: string) {
-  const re = /(是|否|不一定|無法回答)\((.*)\)/
+  const re = /(是|否|不一定|無法回答)\s*\((.*)\)/
   const match = re.exec(res);
   return { answer: match?.[1], reason: match?.[2] }
 }

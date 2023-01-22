@@ -18,6 +18,7 @@
 	let hint: string = '';
 	let questionCount: number = 0;
 	let isWin: boolean = false;
+	let gameEnded: boolean = false;
 
 	// UI
 	let textInputDom: HTMLInputElement;
@@ -32,6 +33,7 @@
 	});
 
 	function reset() {
+		gameEnded = false;
 		textInputValue = TARGET;
 		conversation = [];
 		logs = [];
@@ -124,7 +126,7 @@
 		else showGuessPanel = true;
 	}
 
-	function guess(val: string) {
+	function submitGuess(val: string) {
 		if (!val) return;
 		showGuessPanel = false;
 		val = val.trim();
@@ -132,7 +134,8 @@
 		if (val === problem) {
 			isWin = true;
 			showResultPanel = true;
-			updateConversation('l', `答對了，答案是"${problem}"!`);
+			updateConversation('l', `答對了!`);
+			reveal();
 		} else {
 			isWin = false;
 			showResultPanel = true;
@@ -144,6 +147,7 @@
 		updateConversation('l', `答案是"${problem}"!`);
 		showHiddenText = true;
 		inputLocked = true;
+		gameEnded = true;
 	}
 
 	function continueGuess() {
@@ -151,16 +155,18 @@
 	}
 </script>
 
-<Navbar cls="h-12" />
+<Navbar cls="h-12 shadow" />
 <div class="h-screen px-4 bg-slate-200">
 	<div class="mx-auto h-full w-full max-w-2xl pt-16 pb-10 flex flex-col gap-2 ">
 		<Conversation data={conversation} {isTyping} {showHiddenText} cls="flex-grow" />
 
 		<div class="flex gap-2 pt-2 border-t border-slate-400">
-			<Button variation="secondary" cls="mr-auto" on:click={addTheThing}>這個東西"{TARGET}"</Button>
-			<Button variation="warning" on:click={reveal}>放棄</Button>
+			<Button variation="secondary" disabled={inputLocked} cls="mr-auto" on:click={addTheThing}
+				>這個東西"{TARGET}"</Button
+			>
+			<Button variation="warning" disabled={gameEnded} on:click={reveal}>放棄</Button>
 			<Button variation="secondary" on:click={reset}>重開</Button>
-			<Button variation="primary" on:click={onGuessClick}>作答</Button>
+			<Button variation="primary" disabled={gameEnded} on:click={onGuessClick}>作答</Button>
 		</div>
 
 		<form class="flex" on:submit={() => askQuestion(textInputValue)}>
@@ -168,24 +174,23 @@
 				type="text"
 				bind:this={textInputDom}
 				bind:value={textInputValue}
-				disabled={inputLocked}
+				disabled={inputLocked || gameEnded}
 				class="flex-grow rounded-l-lg border-2 border-slate-400 focus:border-indigo-600 outline-none px-4 py-2"
 			/>
 			<input
 				type="submit"
 				value="我要提問"
-				disabled={!textInputIsValid(textInputValue) || inputLocked}
+				disabled={!textInputIsValid(textInputValue) || inputLocked || gameEnded}
 				class="rounded-r-lg border-2 border-indigo-600 px-4 py-2 text-lg text-white font-bold bg-indigo-600 hover:brightness-90 disabled:bg-slate-400 disabled:border-slate-400"
 			/>
 		</form>
 
-		<GuessPanel bind:show={showGuessPanel} on:submitGuess={(e) => guess(e.detail.guess)} />
+		<GuessPanel bind:show={showGuessPanel} on:submitGuess={(e) => submitGuess(e.detail.guess)} />
 
 		<ResultPanel
 			bind:show={showResultPanel}
 			win={isWin}
 			{questionCount}
-			on:reveal={reveal}
 			on:continue={continueGuess}
 		/>
 	</div>

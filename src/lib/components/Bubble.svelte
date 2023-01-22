@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ProfilePic from '$lib/components/ProfilePic.svelte';
 	import openaiProfilePic from '$lib/assets/openai.jpeg';
+	import { fade } from 'svelte/transition';
 
 	export let side: 'l' | 'r' = 'l';
 	export let error: boolean = false;
