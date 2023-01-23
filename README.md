@@ -9,7 +9,7 @@
 - 用 **是非題** 詢問chatGPT來猜出某樣東西。
 <img width=400 src="https://i.imgur.com/8mz6H6t.png"/>
 
-- `🤔`代表你要問出的`這個東西`，問題中必須包含它。它可以出現在問題的任何地方。按`這個東西🤔`按鈕可以加入編輯中的文字。
+- `🤔`代表你要問出的`這個東西`（送出後🤔會被替換成正確答案再問chatGPT），它可以出現在問題的任何地方。按`這個東西🤔`按鈕可以加入編輯中的文字。
 <img width=400 src="https://i.imgur.com/74aoIrq.png"/>
 
 <img width=200 src="https://i.imgur.com/c8PJnF9.png"/>
