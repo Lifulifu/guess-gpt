@@ -1,6 +1,10 @@
 # GuessGPT
 沒朋友也能玩的猜物品遊戲！
 
+## 題庫
+歡迎編輯[這個檔案](https://github.com/Lifulifu/guess-gpt/blob/main/src/lib/constants.ts)，發PR來增加題庫！
+為了確保chatGPT回答的品質，請儘量出常見的詞彙，並且盡量是非抽象概念的名詞
+
 ## 玩法
 - 用 **是非題** 詢問chatGPT來猜出某樣東西。
 <img width=400 src="https://i.imgur.com/8mz6H6t.png"/>
