@@ -5,7 +5,7 @@ import chatgpt from '../../../hooks.server';
 import { getPromptFromQuestion, parseResponse } from './promts';
 
 export const GET = (async ({ url }) => {
-  if (!chatgpt.status.success) {
+  if (!chatgpt || !chatgpt.status.success) {
     throw error(503, "api is now not available")
   }
   const q = url.searchParams.get('q') as string;

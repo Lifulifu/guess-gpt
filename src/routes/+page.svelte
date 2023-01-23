@@ -68,7 +68,6 @@
 				TARGET +
 				textInputValue.substring(endPos, textInputValue.length);
 		}
-		textInputDom.focus();
 	}
 
 	function updateConversation(
@@ -107,7 +106,6 @@
 		}
 		inputLocked = false;
 		isTyping = null;
-		textInputDom.focus();
 	}
 
 	function textInputIsValid(text: string) {
@@ -133,6 +131,7 @@
 			isWin = false;
 			showResultPanel = true;
 			updateConversation('l', `答錯了！`);
+			textInputValue = TARGET;
 		}
 	}
 
@@ -165,6 +164,7 @@
 		<form class="flex" on:submit={() => askQuestion(textInputValue)}>
 			<input
 				type="text"
+				autofocus
 				bind:this={textInputDom}
 				bind:value={textInputValue}
 				disabled={inputLocked || gameEnded}

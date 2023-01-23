@@ -17,6 +17,7 @@
 	<form class="mt-2" on:submit={() => submitGuess(guess)}>
 		<input
 			type="text"
+			autofocus
 			class="w-full rounded-lg border-2 border-slate-400 focus:border-indigo-600 outline-none px-4 py-2"
 			bind:value={guess}
 		/>

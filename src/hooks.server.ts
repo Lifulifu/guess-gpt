@@ -64,7 +64,10 @@ class ChatGPT {
   }
 }
 
-const chatgpt = new ChatGPT()
-chatgpt.initAllAccounts()
+let chatgpt: ChatGPT | null = null;
+if (import.meta.env.MODE !== 'frontend') {
+  chatgpt = new ChatGPT()
+  chatgpt.initAllAccounts()
+}
 
 export default chatgpt

@@ -16,12 +16,16 @@
 
 <Panel bind:show>
 	{#if win}
-		<h2>答對了！！</h2>
-		<p class="mt-2">你問了 {questionCount} 個問題</p>
-		<Button cls="mt-2 w-full" on:click={() => (show = false)} variation="primary">確定</Button>
+		<form on:submit={() => (show = false)}>
+			<h2>答對了！！</h2>
+			<p class="mt-2">你問了 {questionCount} 個問題</p>
+			<Button autofocus type="submit" cls="mt-2 w-full" variation="primary">確定</Button>
+		</form>
 	{:else}
-		<h2>答錯了！！</h2>
-		<p class="mt-2">你問了 {questionCount} 個問題</p>
-		<Button cls="mt-2 w-full" on:click={continueGuess} variation="primary">繼續</Button>
+		<form on:submit={continueGuess}>
+			<h2>答錯了！！</h2>
+			<p class="mt-2">你問了 {questionCount} 個問題</p>
+			<Button autofocus type="submit" cls="mt-2 w-full" variation="primary">繼續</Button>
+		</form>
 	{/if}
 </Panel>

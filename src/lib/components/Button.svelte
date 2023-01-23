@@ -1,6 +1,8 @@
 <script lang="ts">
 	export let variation: 'primary' | 'secondary' | 'warning' = 'primary';
 	export let disabled: boolean = false;
+	export let type: 'button' | 'submit' = 'button';
+	export let autofocus: boolean = false;
 	export let cls = '';
 
 	let variationStyle = '';
@@ -14,8 +16,9 @@
 </script>
 
 <button
-	type="button"
+	{type}
 	{disabled}
+	{autofocus}
 	class={'rounded-lg px-2 sm:px-4 py-2 text-md font-bold hover:brightness-90 ' +
 		variationStyle +
 		cls}
