@@ -168,7 +168,7 @@
 				bind:this={textInputDom}
 				bind:value={textInputValue}
 				disabled={inputLocked || gameEnded}
-				class="flex-grow rounded-l-lg border-2 border-slate-400 focus:border-indigo-600 outline-none px-4 py-2"
+				class="min-w-0 flex-grow rounded-l-lg border-2 border-slate-400 focus:border-indigo-600 outline-none px-4 py-2"
 			/>
 			<input
 				type="submit"

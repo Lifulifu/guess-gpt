@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 import { ChatGPTAPIBrowser } from 'chatgpt'
-import { ConsoleMessage } from 'puppeteer';
 
 dotenv.config();
 
