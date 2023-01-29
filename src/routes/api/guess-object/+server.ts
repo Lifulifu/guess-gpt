@@ -1,11 +1,11 @@
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
 
 import chatgpt from '../../../hooks.server';
 import { getPromptFromQuestion, parseResponse } from './promts';
 
 export const GET = (async ({ url }) => {
-  if (!chatgpt || !chatgpt.status.success) {
+  if (!chatgpt || chatgpt.getWorkingApis().length <= 0) {
     throw error(503, "api is now not available")
   }
   const q = url.searchParams.get('q') as string;

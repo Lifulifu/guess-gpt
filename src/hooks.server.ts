@@ -1,13 +1,13 @@
 import * as dotenv from 'dotenv';
 import { ChatGPTAPIBrowser } from 'chatgpt'
+import { randomSelect } from '$lib/util';
 
 dotenv.config();
 
 class ChatGPT {
   accounts: { email: string, password: string }[] = []
-  apiPool: ChatGPTAPIBrowser[] = []
+  apiPool: { api:ChatGPTAPIBrowser, account: string, working: boolean }[] = []
   settled = false
-  status = { success: 0, fail: 0 }
 
   constructor() { }
 
@@ -19,20 +19,21 @@ class ChatGPT {
     }
     const promises = this.accounts.map(({ email, password }) => this.initWithAccount(email, password))
     return Promise.allSettled(promises).then((results) => {
-      let success = 0, fail = 0;
-      for (const result of results) {
+      results.forEach((result, i) => {
         if (result.status === 'fulfilled') {
           const api = result.value
-          this.apiPool.push(api)
-          success++
+          this.apiPool.push({api, account: this.accounts[i].email, working: true})
         } else {
-          fail++;
+          console.error('error initializing account', result.reason)
         }
-      }
+      })
       this.settled = true
-      this.status = { success, fail }
-      console.log(`all chatgpt accounts initialized. success: ${success}, fail: ${fail}`)
+      console.log(`all chatgpt accounts initialized. success: ${this.apiPool.length} / ${this.accounts.length}`)
     })
+  }
+
+  getWorkingApis() {
+    return this.apiPool.filter(({working}) => working)
   }
 
   async initWithAccount(email: string, password: string) {
@@ -50,14 +51,18 @@ class ChatGPT {
     if (this.apiPool.length === 0) {
       throw new Error('no chatgpt account available')
     }
-    const index = Math.floor(Math.random() * this.apiPool.length)
-    const api = this.apiPool[index]
+    // random index of all working apis
+    const index = randomSelect(this.apiPool.map(({working}, i) => (working ? i : -1)).filter((i) => i !== -1))
+    const { api, account, working } = this.apiPool[index]
     try {
       const response = await api.sendMessage(message, { timeoutMs })
+      if(working === false) console.log(`account ${account} has been recovered.`)
+      this.apiPool[index].working = true;
       return { ...response, apiIdx: index }
     } catch (e) {
       console.error(e)
-      console.log('refreshing session for account ', index, ', email ', this.accounts[index].email)
+      console.log('refreshing session for account', account)
+      this.apiPool[index].working = false;
       api.refreshSession();
       throw new Error('error getting response from chatgpt')
     }
