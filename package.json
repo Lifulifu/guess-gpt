@@ -2,6 +2,9 @@
 	"name": "guess-gpt",
 	"version": "0.0.1",
 	"private": true,
+	"engines": {
+		"node": ">=18"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"dev-frontend": "vite dev --mode frontend",
