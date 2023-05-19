@@ -1,40 +1,47 @@
-# GuessGPT
-沒朋友也能玩的猜物品遊戲！
+# Svelte + TS + Vite
 
-## 題庫
-歡迎編輯[這個檔案](https://github.com/Lifulifu/guess-gpt/blob/main/src/lib/constants.ts)，發PR來增加題庫！
-為了確保chatGPT回答的品質，請儘量出常見的詞彙，並且盡量是非抽象概念的名詞
+This template should help get you started developing with Svelte and TypeScript in Vite.
 
-## 玩法
-- 用 **是非題** 詢問chatGPT來猜出某樣東西。
-<img width=400 src="https://i.imgur.com/8mz6H6t.png"/>
+## Recommended IDE Setup
 
-- `🤔`代表你要問出的`這個東西`（送出後🤔會被替換成正確答案再問chatGPT），它可以出現在問題的任何地方。按`這個東西🤔`按鈕可以加入編輯中的文字。
-<img width=400 src="https://i.imgur.com/74aoIrq.png"/>
+[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
 
-<img width=200 src="https://i.imgur.com/c8PJnF9.png"/>
+## Need an official Svelte framework?
 
-- 若問題不是是非題，將無法得到線索
-<img width=400 src="https://i.imgur.com/PJThQWz.png"/>
+Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
 
-<img width=400 src="https://i.imgur.com/TBR3qfa.png"/>
+## Technical considerations
 
-- 若答對或放棄即可以揭曉答案，在對話紀錄chatGPT會試著解釋他每一題的回答，看看到底是誰在雷。
-<img width=400 src="https://i.imgur.com/HQqUEA9.png"/>
+**Why use this over SvelteKit?**
 
-- 若出現錯誤，有可能是由於超出chatGPT流量限制，也有可能是你的問題太奇怪，chatGPT給出的答案無法解析
-<img width=400 src="https://i.imgur.com/YcA3BDv.png"/>
-  
-- 儘量問具體明確的問題，否則容易得到"不一定"的答案
-<img width=400 src="https://i.imgur.com/pg1C4am.png"/>
+- It brings its own routing solution which might not be preferable for some users.
+- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
 
-## Dev
-```
-pnpm i
-pnpm dev
-```
+This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
 
-## Build
-```
-pnpm build
+Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+
+**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+
+Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+
+**Why include `.vscode/extensions.json`?**
+
+Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+
+**Why enable `allowJs` in the TS template?**
+
+While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
+
+**Why is HMR not preserving my local component state?**
+
+HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
+
+If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+
+```ts
+// store.ts
+// An extremely simple external store
+import { writable } from 'svelte/store'
+export default writable(0)
 ```

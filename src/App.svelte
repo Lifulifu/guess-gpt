@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import './app.css'
 
-	import type { BubbleData, LogData } from '$lib/types';
-	import { TARGET, PROBLEMS } from '$lib/constants';
-	import Button from '$lib/components/Button.svelte';
-	import Conversation from '$lib/components/Conversation.svelte';
-	import GuessPanel from '$lib/components/GuessPanel.svelte';
-	import Navbar from '$lib/components/Navbar.svelte';
-	import ResultPanel from '$lib/components/ResultPanel.svelte';
+	import type { BubbleData, LogData } from './lib/types';
+	import { TARGET, PROBLEMS } from './lib/constants';
+	import Button from './lib/components/Button.svelte';
+	import Conversation from './lib/components/Conversation.svelte';
+	import GuessPanel from './lib/components/GuessPanel.svelte';
+	import Navbar from './lib/components/Navbar.svelte';
+	import ResultPanel from './lib/components/ResultPanel.svelte';
 	import pinyin from 'chinese-to-pinyin';
 
 	// data

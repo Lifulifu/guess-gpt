@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import Button from '$lib/components/Button.svelte';
-	import Panel from '$lib/components/Panel.svelte';
+	import Button from './Button.svelte';
+	import Panel from './Panel.svelte';
 	export let show: boolean = false;
 	let guess: string = '';
 	const dispatch = createEventDispatcher();

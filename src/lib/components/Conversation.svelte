@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Bubble from '$lib/components/Bubble.svelte';
-	import type { BubbleData } from '$lib/types';
+	import Bubble from './Bubble.svelte';
+	import type { BubbleData } from '../types';
 	import { afterUpdate } from 'svelte';
 	export let data: BubbleData[] = [];
 	export let showHiddenText: boolean = false;
