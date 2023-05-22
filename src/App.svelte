@@ -7,7 +7,6 @@
 	import Button from './lib/components/Button.svelte';
 	import Conversation from './lib/components/Conversation.svelte';
 	import GuessPanel from './lib/components/GuessPanel.svelte';
-	import Navbar from './lib/components/Navbar.svelte';
 	import ResultPanel from './lib/components/ResultPanel.svelte';
 	import ProvideApiKeyPanel from './lib/components/ProvideApiKeyPanel.svelte';
 
@@ -24,6 +23,7 @@
 	let gameEnded: boolean = false;
 	let apikey: string = "";
 	$: core = apikey?.length <= 0 ? null : new GuessGptCore(apikey);
+	$: console.log(showProvideApiPanel);
 
 	// UI
 	let textInputDom: HTMLInputElement;
@@ -33,7 +33,7 @@
 	let showHiddenText: boolean = false;
 	let inputLocked: boolean = false;
 	let windowHeight: number = 0;
-	$: showProvideApiPanel = apikey?.length <= 0;
+	let showProvideApiPanel: boolean = true;
 
 	onMount(() => {
 		resetGame();
@@ -146,7 +146,12 @@
 	}
 </script>
 
-<Navbar class="h-12 shadow" />
+<div class='fixed w-full px-4 flex items-center gap-4 bg-white h-12 shadow'>
+	<div class="mr-auto text-2xl text-indigo-600 font-bold whitespace-pre">🤔 GuessGPT</div>
+	<div class="text-slate-600 font-bold cursor-pointer" on:click={() => {showProvideApiPanel = true}}>API Key</div>
+	<a href="https://github.com/Lifulifu/guess-gpt" class="text-slate-600 font-bold">玩法說明</a>
+</div>
+
 <div class="main-content px-4 bg-slate-200" style={`--window-height: ${windowHeight}px`}>
 	<div class="mx-auto h-full w-full max-w-2xl pt-16 pb-4 flex flex-col gap-2 ">
 		<Conversation data={conversation} {isTyping} {showHiddenText} class="flex-grow" />
@@ -194,8 +199,11 @@
 		/>
 
 		<ProvideApiKeyPanel
-			show={showProvideApiPanel}
-			on:submit={(val) => { apikey = val.detail.value }}
+			bind:show={showProvideApiPanel}
+			on:submit={(val) => {
+				apikey = val.detail.value;
+				showProvideApiPanel = false;
+			}}
 		/>
 	</div>
 </div>

@@ -11,7 +11,7 @@
   }
 </script>
 
-<Panel bind:show closable={false}>
+<Panel bind:show>
 	<h2>請提供您的 OpenAI API key</h2>
 	<form class="mt-2" on:submit|preventDefault={submitApikey}>
 		<input
