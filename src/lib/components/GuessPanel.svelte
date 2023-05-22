@@ -14,7 +14,7 @@
 
 <Panel bind:show>
 	<h2>我猜答案是：</h2>
-	<form class="mt-2" on:submit={submitGuess}>
+	<form class="mt-2" on:submit|preventDefault={submitGuess}>
 		<input
 			type="text"
 			autofocus
