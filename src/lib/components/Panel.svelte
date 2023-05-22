@@ -1,11 +1,12 @@
 <script>
 	import { fade } from 'svelte/transition';
 	export let show = false;
+	export let closable = true;
 </script>
 
 {#if show}
 	<div
-		on:click={() => (show = false)}
+		on:click={() => {if (closable) show = false}}
 		on:keydown
 		class="fixed inset-0 bg-black/50"
 		transition:fade={{ duration: 100 }}

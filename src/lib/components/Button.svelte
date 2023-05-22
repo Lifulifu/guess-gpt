@@ -3,7 +3,6 @@
 	export let disabled: boolean = false;
 	export let type: 'button' | 'submit' = 'button';
 	export let autofocus: boolean = false;
-	export let cls = '';
 
 	let variationStyle = '';
 	$: {
@@ -19,9 +18,7 @@
 	{type}
 	{disabled}
 	{autofocus}
-	class={'rounded-lg px-2 sm:px-4 py-2 text-md font-bold hover:brightness-90 ' +
-		variationStyle +
-		cls}
+	class="rounded-lg px-2 sm:px-4 py-2 text-md font-bold hover:brightness-90 {variationStyle} {$$props.class}"
 	on:click
 >
 	<slot />

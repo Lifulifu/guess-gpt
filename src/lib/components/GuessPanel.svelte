@@ -6,15 +6,15 @@
 	let guess: string = '';
 	const dispatch = createEventDispatcher();
 
-	function submitGuess(val: string) {
-		dispatch('submitGuess', { guess: val });
+	function submitGuess() {
+		dispatch('submitGuess', { guess });
 		guess = '';
 	}
 </script>
 
 <Panel bind:show>
 	<h2>我猜答案是：</h2>
-	<form class="mt-2" on:submit={() => submitGuess(guess)}>
+	<form class="mt-2" on:submit={submitGuess}>
 		<input
 			type="text"
 			autofocus
@@ -22,12 +22,8 @@
 			bind:value={guess}
 		/>
 		<div class="mt-2 flex gap-2">
-			<Button cls="flex-grow" on:click={() => (show = false)} variation="secondary">取消</Button>
-			<input
-				type="submit"
-				value="確定"
-				class="flex-grow rounded-lg border-2 border-indigo-600 px-4 py-2 text-lg text-white font-bold bg-indigo-600 hover:brightness-90"
-			/>
+			<Button class="flex-grow" on:click={() => (show = false)} variation="secondary">取消</Button>
+			<Button type="submit">確定</Button>
 		</div>
 	</form>
 </Panel>

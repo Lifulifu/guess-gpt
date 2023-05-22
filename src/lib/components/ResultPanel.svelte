@@ -10,22 +10,26 @@
 
 	function continueGuess() {
 		dispatch('continue');
+		closePanel();
+	}
+
+	function closePanel() {
 		show = false;
 	}
 </script>
 
 <Panel bind:show>
 	{#if win}
-		<form on:submit={() => (show = false)}>
+		<form on:submit|preventDefault={closePanel}>
 			<h2>答對了！！</h2>
 			<p class="mt-2">你問了 {questionCount} 個問題</p>
-			<Button autofocus type="submit" cls="mt-2 w-full" variation="primary">確定</Button>
+			<Button type="submit" class="mt-2 w-full" variation="primary">確定</Button>
 		</form>
 	{:else}
-		<form on:submit={continueGuess}>
+		<form on:submit|preventDefault={continueGuess}>
 			<h2>答錯了！！</h2>
 			<p class="mt-2">你問了 {questionCount} 個問題</p>
-			<Button autofocus type="submit" cls="mt-2 w-full" variation="primary">繼續</Button>
+			<Button type="submit" class="mt-2 w-full" variation="primary">繼續</Button>
 		</form>
 	{/if}
 </Panel>

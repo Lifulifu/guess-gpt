@@ -1,4 +1,4 @@
-export const TARGET = '🤔';
+export const TARGET_PLACEHOLDER = '🤔';
 
 export const PROBLEMS = `
 美國
