@@ -23,7 +23,6 @@
 	let gameEnded: boolean = false;
 	let apikey: string = "";
 	$: core = apikey?.length <= 0 ? null : new GuessGptCore(apikey);
-	$: console.log(showProvideApiPanel);
 
 	// UI
 	let textInputDom: HTMLInputElement;

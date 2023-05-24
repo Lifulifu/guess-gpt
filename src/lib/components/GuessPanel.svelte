@@ -23,7 +23,7 @@
 		/>
 		<div class="mt-2 flex gap-2">
 			<Button class="flex-grow" on:click={() => (show = false)} variation="secondary">取消</Button>
-			<Button type="submit">確定</Button>
+			<Button class="flex-grow" type="submit">確定</Button>
 		</div>
 	</form>
 </Panel>
