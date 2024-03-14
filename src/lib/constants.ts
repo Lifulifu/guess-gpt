@@ -1,5 +1,12 @@
 export const TARGET_PLACEHOLDER = '🤔';
 
+export const RESPONSE_MAPPING = {
+  YES: '是',
+  NO: '否',
+  MAYBE: '不一定',
+  ERROR: '無法回答'
+};
+
 export const PROBLEMS = `
 美國
 蘋果

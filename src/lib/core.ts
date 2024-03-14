@@ -1,59 +1,52 @@
-import { OpenAI } from "langchain/llms/openai";
-import { PromptTemplate } from "langchain/prompts";
+import { ChatOpenAI } from "@langchain/openai";
+import { HumanMessage, AIMessage, SystemMessage } from "@langchain/core/messages";
 import { TARGET_PLACEHOLDER } from './constants';
 
 export class GuessGptCore {
   private apikey: string;
-  private model: OpenAI;
-  private inputTemplate: PromptTemplate;
+  private model: ChatOpenAI;
+  private prompt: any[];
 
   constructor(apikey: string = "") {
     this.apikey = apikey;
-    this.model = new OpenAI({
+    this.model = new ChatOpenAI({
       openAIApiKey: this.apikey,
       modelName: 'gpt-3.5-turbo',
       temperature: 0
     });
+    this.prompt = [
+      new SystemMessage('請基於常識回答問題。請用 [YES, NO, MAYBE, ERROR] 來回答。如果該問題無法以二元的 YES, NO 回答，則回答 MAYBE，若有其他無法回答的情況，請回答 ERROR。請寫出你選擇這個答案的理由。'),
 
-    this.inputTemplate = new PromptTemplate({
-      inputVariables: ["question"],
-      template: `請基於常識回答下列問題。請用『是/否/不一定』來回答。如果問題不是是非題或者有其他無法回答的情況，請回答『無法回答』。請寫出你選擇這個答案的理由。
+      new HumanMessage('『狗』是種動物嗎？'),
+      new AIMessage('YES（狗屬於動物界）'),
 
-問題：『狗』是種動物嗎？
-回答：是
-理由：狗屬於動物
+      new HumanMessage('『蘋果』是紅色的嗎'),
+      new AIMessage('MAYBE（蘋果也有可能是綠色、黃色等其他顏色）'),
 
-問題：『桌子』是食物嗎？
-回答：否
-理由：桌子通常不會被視為食物
+      new HumanMessage('『桌子』是食物嗎?'),
+      new AIMessage('NO（桌子通常不會被視為食物）'),
 
-問題：『蘋果』是紅色的嗎？
-回答：不一定
-理由：蘋果有可能是其他顏色
-
-問題：『氣球』是什麼形狀的？
-回答：無法回答
-理由：問題不是是非題
-
-問題：{question}
-回答：`
-    });
+      new HumanMessage('『氣球』是什麼形狀的？'),
+      new AIMessage('ERROR（問題並非是非題）')
+    ];
   }
 
   public async ask(question: string, target: string): Promise<{ answer: string, reason: string; }> {
     question = question.replaceAll('\n', '');
     question = question.replaceAll(TARGET_PLACEHOLDER, target);
-    const input = await this.inputTemplate.format({ question });
-    const output = await this.model.call(input);
-    console.log(input);
-    console.log(output);
-    return this.parseOutput(output);
+    const output = await this.model.invoke([
+      ...this.prompt, new HumanMessage(question)
+    ]);
+    const message = output.content.toString();
+    console.log(question);
+    console.log(message);
+    return this.parseOutput(message);
   }
 
   private parseOutput(output: string): { answer: string, reason: string; } {
-    const re = /^(是|否|不一定|無法回答)\n+理由：(.*)/;
+    const re = /^(YES|NO|MAYBE|ERROR)（(.*)）$/;
     const match = re.exec(output);
     return { answer: match?.[1], reason: match?.[2] };
   }
 
-}
+};

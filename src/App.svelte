@@ -3,7 +3,7 @@
 	import './app.css'
 
 	import type { BubbleData, LogData } from './lib/types';
-	import { TARGET_PLACEHOLDER, PROBLEMS } from './lib/constants';
+	import { TARGET_PLACEHOLDER, PROBLEMS, RESPONSE_MAPPING } from './lib/constants';
 	import Button from './lib/components/Button.svelte';
 	import Conversation from './lib/components/Conversation.svelte';
 	import GuessPanel from './lib/components/GuessPanel.svelte';
@@ -95,7 +95,8 @@
 		isTyping = 'l';
 		try {
 			let response = await core.ask(questionInputValue, targetValue);
-			updateConversation('l', response.answer, response.reason);
+			let answerText = RESPONSE_MAPPING[response.answer];
+			updateConversation('l', answerText, response.reason);
 			questionCount++;
 			questionInputValue = TARGET_PLACEHOLDER; // reset input value
 		} catch (e) {
