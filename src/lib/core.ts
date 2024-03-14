@@ -9,7 +9,11 @@ export class GuessGptCore {
 
   constructor(apikey: string = "") {
     this.apikey = apikey;
-    this.model = new OpenAI({ openAIApiKey: this.apikey, temperature: 0 });
+    this.model = new OpenAI({
+      openAIApiKey: this.apikey,
+      modelName: 'gpt-3.5-turbo',
+      temperature: 0
+    });
 
     this.inputTemplate = new PromptTemplate({
       inputVariables: ["question"],
@@ -47,7 +51,7 @@ export class GuessGptCore {
   }
 
   private parseOutput(output: string): { answer: string, reason: string; } {
-    const re = /(是|否|不一定|無法回答)\n+理由：(.*)/;
+    const re = /^(是|否|不一定|無法回答)\n+理由：(.*)/;
     const match = re.exec(output);
     return { answer: match?.[1], reason: match?.[2] };
   }
